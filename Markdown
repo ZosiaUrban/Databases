@@ -1,0 +1,146 @@
+Week 4 Answers 
+question 1
+MariaDB [flight_game]> SELECT 'Finland' AS `country name`, name AS `airport name`
+    -> FROM airport
+    -> WHERE iso_country = 'FI' AND scheduled_service = 'yes';
++--------------+-----------------------------+
+| country name | airport name                |
++--------------+-----------------------------+
+| Finland      | Enontekio Airport           |
+| Finland      | Helsinki Vantaa Airport     |
+| Finland      | Ivalo Airport               |
+| Finland      | Joensuu Airport             |
+| Finland      | Jyv?skyl? Airport           |
+| Finland      | Kemi-Tornio Airport         |
+| Finland      | Kajaani Airport             |
+| Finland      | Kokkola-Pietarsaari Airport |
+| Finland      | Kuusamo Airport             |
+| Finland      | Kittil? Airport             |
+| Finland      | Kuopio Airport              |
+| Finland      | Lappeenranta Airport        |
+| Finland      | Mariehamn Airport           |
+| Finland      | Oulu Airport                |
+| Finland      | Pori Airport                |
+| Finland      | Rovaniemi Airport           |
+| Finland      | Savonlinna Airport          |
+| Finland      | Sein?joki Airport           |
+| Finland      | Tampere-Pirkkala Airport    |
+| Finland      | Turku Airport               |
+| Finland      | Vaasa Airport               |
+| Finland      | Varkaus Airport             |
++--------------+-----------------------------+
+22 rows in set (0.016 sec)
+
+question 2
+MariaDB [flight_game]> SELECT g.screen_name, g.location, a.name
+    -> FROM game g
+    -> JOIN airport a ON g.location = a.ident
+    -> LIMIT 5;
++-------------+----------+-------------------------+
+| screen_name | location | name                    |
++-------------+----------+-------------------------+
+| Heini       | EFHK     | Helsinki Vantaa Airport |
+| Vesa        | EGCC     | Manchester Airport      |
+| Ilkka       | EGKK     | London Gatwick Airport  |
++-------------+----------+-------------------------+
+3 rows in set (0.001 sec)
+
+MariaDB [flight_game]> SELECT g.screen_name, c.name AS `name`
+    -> FROM game g
+    -> JOIN airport a ON g.location = a.ident
+    -> JOIN country c ON a.iso_country = c.iso_country;
+
+Question 3
++-------------+----------------+
+| screen_name | name           |
++-------------+----------------+
+| Heini       | Finland        |
+| Vesa        | United Kingdom |
+| Ilkka       | United Kingdom |
++-------------+----------------+
+3 rows in set (0.008 sec)
+
+Question 4
+MariaDB [flight_game]> SELECT a.name AS `name`, g.screen_name AS `screen_name`
+    -> FROM airport a
+    -> LEFT JOIN game g ON a.ident = g.location
+    -> WHERE a.name LIKE '%Hels%';
++---------------------------------------+-------------+
+| name                                  | screen_name |
++---------------------------------------+-------------+
+| Winchelsea Airport                    | NULL        |
+| Reichelsheim Airport                  | NULL        |
+| Flugplatz Michelstadt/Odenwald        | NULL        |
+| Helsinki Malmi Airport                | NULL        |
+| Helsinki Vantaa Airport               | Heini       |
+| Helsinki East-Redstone Airport        | NULL        |
+| ?ngelholm-Helsingborg Airport         | NULL        |
+| Shelsley-Beauchamp Airstrip           | NULL        |
+| Michels Avia??o Agr?cola LTDA Airport | NULL        |
+| Michels Farms Airport                 | NULL        |
++---------------------------------------+-------------+
+10 rows in set (0.048 sec)
+
+
+Ex 5:
+Question 1
+MariaDB [flight_game]> SELECT 'Japan' AS Country
+    -> WHERE 'Satsuma' LIKE 'Satsuma%';
++---------+
+| Country |
++---------+
+| Japan   |
++---------+
+1 row in set (0.013 sec)
+
+Question 2
+MariaDB [flight_game]> SELECT name
+    -> FROM airport
+    -> WHERE iso_country = 'MC';
++----------------------------------+
+| name                             |
++----------------------------------+
+| Monaco Heliport                  |
+| Terre-Plein du Larvotto Heliport |
+| Princess Grace Hospital Helipad  |
++----------------------------------+
+3 rows in set (0.001 sec)
+
+MariaDB [flight_game]>
+
+Question 3
+MariaDB [flight_game]> SELECT screen_name
+    -> FROM game
+    -> WHERE screen_name IN ('Heini', 'Ilkka');
++-------------+
+| screen_name |
++-------------+
+| Heini       |
+| Ilkka       |
++-------------+
+2 rows in set (0.012 sec)
+
+Question 4 
+MariaDB [flight_game]> select country.name
+    -> from country
+    -> where iso_country not in
+    -> (select airport.iso_country
+    -> from airport);
++-------------------------------+
+| name                          |
++-------------------------------+
+| Pitcairn                      |
+| Tokelau                       |
+| Unknown or unassigned country |
++-------------------------------+
+3 rows in set (0.001 sec)
+
+Question 5
+	
+select name
+from goal
+where id not in(
+select goal.id
+from goal, goal_reached, game
+where game.id = game_id and goal.id = goal_id and screen_name = "Heini"
+);
